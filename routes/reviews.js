@@ -29,7 +29,7 @@ router.post('/', (req, res, next) => {
 
 // /* GET reviews show  /posts/:id/reviews/:review_id */   //can't use id cuz posts is using so I have to rename 
 // router.get('/:review_id', (req, res, next) => {
-//   res.send('SHOW /reviews/:id');
+//   res.send('SHOW /reviews/:review_id');
 // });
 
 /* GET reviews edit  /posts/:id/reviews/:review_id/edit */
