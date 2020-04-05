@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
 //NAME OF THE METHOD THAT WE NEED FROM THAT OBJECT
 //when we require the controller index, it exports the object so we require it 
 //we can pull any of the keys from that object
@@ -9,7 +8,7 @@ const passport = require('passport');
 //we destructure the object that we require from the controller index and we extract post register 
 //-->puth inside of a variable
 const {
-  postRegister
+  postRegister, postLogin, getLogout
 } = require('../controllers/index');
 //I pull the errorHandler out of the object that we require from the miggleware index.js
 const {
@@ -44,16 +43,10 @@ router.get('/login', (req, res, next) => {
 });
 
 /* POST /login */
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login'
-}));
+router.post('/login', postLogin);
 
 /* GET /logout */
-router.get('/logout', (req, res, next) => {
-  req.logout();
-  res.redirect('/');
-});
+router.get('/logout', getLogout);
 
 /* GET /profile */
 router.get('/profile', (req, res, next) => {
