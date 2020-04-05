@@ -4,12 +4,27 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const User = require('./models/user');
+const session = require('express-session');
+const mongoose = require('mongoose');
 
+
+//require routes
 const index = require('./routes/index');
 const posts = require('./routes/posts');
 const reviews = require('./routes/reviews');
 
 const app = express();
+//connect to the database
+mongoose.connect('mongodb://localhost:27017/surf-shop', {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
+
+//check if I am connected to the database
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:')); //telling the error if some
+db.once('open', () => {
+console.log('we are connected!');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +38,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//Configure Passport and Sessions
+app.use(session({
+  secret: 'stranger danger!',
+  resave: false,
+  saveUninitialized: true
+}));
+
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//Mount routes
 app.use('/', index);
 app.use('/posts', posts);
 app.use('/posts/:id/reviews', reviews); //have access to the id of the post that the review belongs to
