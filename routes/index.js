@@ -8,6 +8,8 @@ const router = express.Router();
 //we destructure the object that we require from the controller index and we extract post register 
 //-->puth inside of a variable
 const { postRegister } = require('../controllers/index');
+//I pull the errorHandler out of the object that we require from the miggleware index.js
+const { errorHandler} = require('../middleware/index');
 
 //this is the original verson, without destructuring
 // const indexObj = require('../controllers/index');
@@ -26,7 +28,7 @@ router.get('/register', (req, res, next) => {
 
 
 /* POST /register */
-router.post('/register', postRegister);
+router.post('/register', errorHandler(postRegister));
 
 /* GET /login */
 router.get('/login', (req, res, next) => {

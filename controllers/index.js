@@ -2,7 +2,7 @@ const User = require('../models/user');
 
 module.exports = {
     //
-    postRegister(req, res, next) {
+    async postRegister(req, res, next) {
         // res.send('POST REGISTER');
         const newUser = new User({
           username: req.body.username,
@@ -10,16 +10,32 @@ module.exports = {
           image: req.body.image
         });
 
-        User.register(newUser, req.body.password, (err) => 
-        {
-          if (err) {
-            console.log('error while user register!', err);
-            return next(err);
-          }
+        // User.register(newUser, req.body.password, (err) => 
+        // {
+        //   if (err) {
+        //     console.log('error while user register!', err);
+        //     return next(err);
+        //   }
       
-          console.log('user registered!');
+        //   console.log('user registered!');
       
-          res.redirect('/');
-        });
+        //   res.redirect('/');
+        // });
+
+
+
+        //look for errors with a try and catch but it is not really efficient
+        // try {
+        // await User.register(newUser, req.body.password);  //put async keyword before the register function
+        // } catch (err) {
+        //   return next(err);
+        // }
+        // res.redirect('/');
+
+
+        //and this is the method that I should use (clean and more useful later)
+//we need the index.js file as a middleware
+        await User.register(newUser, req.body.password);  
+        res.redirect('/');
     }
 }
