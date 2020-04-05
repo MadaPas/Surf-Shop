@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 //NAME OF THE METHOD THAT WE NEED FROM THAT OBJECT
 //when we require the controller index, it exports the object so we require it 
 //we can pull any of the keys from that object
@@ -7,9 +8,14 @@ const router = express.Router();
 //////////////////SOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 //we destructure the object that we require from the controller index and we extract post register 
 //-->puth inside of a variable
-const { postRegister } = require('../controllers/index');
+const {
+  postRegister
+} = require('../controllers/index');
 //I pull the errorHandler out of the object that we require from the miggleware index.js
-const { errorHandler} = require('../middleware/index');
+const {
+  errorHandler
+} = require('../middleware/index');
+
 
 //this is the original verson, without destructuring
 // const indexObj = require('../controllers/index');
@@ -18,7 +24,9 @@ const { errorHandler} = require('../middleware/index');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Surfing - Shop --> Home page' });
+  res.render('index', {
+    title: 'Surfing - Shop --> Home page'
+  });
 });
 
 /* GET /register */
@@ -36,8 +44,15 @@ router.get('/login', (req, res, next) => {
 });
 
 /* POST /login */
-router.post('/login', (req, res, next) => {
-  res.send('POST /login');
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login'
+}));
+
+/* GET /logout */
+router.get('/logout', (req, res, next) => {
+  req.logout();
+  res.redirect('/');
 });
 
 /* GET /profile */
