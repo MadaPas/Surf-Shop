@@ -1,4 +1,10 @@
 const Post = require('../models/post');
+const cloudinary = require('cloudinary');
+cloudinary.config({
+    cloud_name: 'madapas',
+    api_key: '432985464553714',
+    api_secret: process.env.CLOUDINARY_SECRET
+});
 
 module.exports = {
     //Posts Index
@@ -15,6 +21,16 @@ module.exports = {
 
     //Posts Create
     async postCreate(req, res, next) {
+        req.body.post.images = [];
+        for(const file of req.files){
+            let image = await cloudinary.v2.uploader.upload(file.path);
+            req.body.post.images.push({
+                url: image.secure_url,
+                public_id: image.public_id
+            });
+        }
+
+
         // use req.body to create new post 
         let post = await Post.create(req.body.post);
         // plug in the id of the new created post
