@@ -10,9 +10,9 @@ const router = express.Router();
 const {
   postRegister, postLogin, getLogout
 } = require('../controllers/index');
-//I pull the errorHandler out of the object that we require from the miggleware index.js
+//I pull the asyncErrorHandler out of the object that we require from the miggleware index.js
 const {
-  errorHandler
+  asyncErrorHandler
 } = require('../middleware/index');
 
 
@@ -35,7 +35,7 @@ router.get('/register', (req, res, next) => {
 
 
 /* POST /register */
-router.post('/register', errorHandler(postRegister));
+router.post('/register', asyncErrorHandler(postRegister));
 
 /* GET /login */
 router.get('/login', (req, res, next) => {
