@@ -60,6 +60,9 @@ module.exports = {
         let post = await Post.findById(req.params.id);
         // check if there are any images for deletion
         if (req.body.deleteImages && req.body.deleteImages.length) {
+            //freeze the code using locus and see what is inside that array
+            // eval(require('locus'));
+
             // assign deleteImages from req.body to its own variable
             let deleteImages = req.body.deleteImages;
             // loop over deleteImages
@@ -105,7 +108,14 @@ module.exports = {
 
     //Posts delete
     async postDelete(req, res, next) {
-        let post = await Post.findByIdAndRemove(req.params.id);
+
+        let post = await Post.findById(req.params.id);
+        //we have access now to the array of images
+        //we can iterate over the images and use that to delete the image from Cloudinary
+        for(const image of post.images) {
+            await cloudinary.v2.uploader.destroy(image.public_id);
+        }
+        await post.remove();
         res.redirect('/posts');
     }
 
